@@ -5,9 +5,10 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [
     react({
+      plugins: [react()],
+      base: '/'
       babel: {
         plugins: [['babel-plugin-react-compiler']],
-        base: process.env.VITE_BASE_PATH || "/react-vite-deploy",
       },
     }),
   ],
