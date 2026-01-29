@@ -7,6 +7,7 @@ export default defineConfig({
     react({
       babel: {
         plugins: [['babel-plugin-react-compiler']],
+        base: process.env.VITE_BASE_PATH || "/react-vite-deploy",
       },
     }),
   ],
