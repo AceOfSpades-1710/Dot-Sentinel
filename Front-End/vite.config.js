@@ -7,7 +7,6 @@ export default defineConfig({
     react({
       plugins: [react()],
       base: '/'
-      },
     }),
   ],
 })
