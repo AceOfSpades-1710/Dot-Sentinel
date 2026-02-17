@@ -1,3 +1,24 @@
+
+* {
+  box-sizing: border-box;
+}
+
+body, #root {
+  min-height: 100vh;
+  opacity: 1;
+  background-color: #000000;
+  background-image: url("https://www.transparenttextures.com/patterns/buried.png");
+}
+
+
+/* =====================
+   GLOBAL RESET & BASE
+===================== */
+
+html {
+  scroll-behavior: smooth;
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -13,392 +34,269 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-
-a:hover {
-  color: #535bf2;
-}
-
 body {
   margin: 0;
   min-width: 320px;
   background-color: black;
 }
 
-nav{
-    display:flex;
-    justify-content:space-between;
-    width: 60%;
-    padding: 1rem;
-    margin-left: 18%;
-    margin-top:1%;
+/* =====================
+   LINKS & NAV
+===================== */
+
+a {
+  font-weight: 500;
+  color: white;
+  text-decoration: none;
 }
 
-nav a{
-    color: white;
-    text-decoration: none;
-    font-size: 100%;
-    z-index: 2;
-    opacity: 0;
-    animation: fadeIn 1s ease forwards 1s;
-}
-nav a:hover {
-    color: rgb(0, 157, 255);
+a:hover {
+  color: rgb(0, 157, 255);
 }
 
-
-.bg-container {
-  position:absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 0;
-  overflow: hidden;
-  opacity: 0;
-  animation: fadeIn 1s ease forwards 0.8s;
+nav {
+  display:flex;
+  justify-content: space-between;
+  width: 60%;
+  padding: 1rem;
+  margin-left: 18%;
+  margin-top: 1%;
+  z-index: 2;
 }
 
-/* Background Image */
-.bg-image {
-  margin-top: 2%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100vw;
-  height: 100vh;
-  background-image: url('assets/BG.png'); /* Replace with your image */
-  background-size: cover;
-  background-position: center;
-  filter: blur(15px); /* Blur effect */
-  z-index: 0;
-}
-
-h1 {
-  font-size: 3.2em;
-  margin-bottom: 0;
-  margin-top: 0;
-}
-
+/* =====================
+   HERO SECTION
+===================== */
 
 .parent {
   display: grid;
-  grid-template-columns: 5fr 5fr;             /* Full viewport height */
-  width: 100%;                     /* Full viewport width */
-  z-index: 2;
+  grid-template-columns: 1fr 1fr;
+  height: 90vh;
+  width: 100%;
   align-items: center;
 }
 
 .div1 {
-  margin-left: 30px;
-  margin-top: 25%;
-  display: flex;                         /* flexbox centering */
-  flex-direction: column;                /* stack children vertically */
-  justify-content: center;               /* vertical center */
-  align-items: flex-start;               /* left-align items */
-  padding-left: 1.5rem;                  /* small left margin */
-  gap: 0.5rem;                           /* optional spacing between lines */
-  overflow-y: auto;                      /* scroll only inside this column */
-  scrollbar-gutter: stable;              /* keep layout stable */
+  margin-left: 80px;
+}
+.div1 h1{
+  font-size: 90px;
 }
 
 .div2 {
-  grid-area: 1 / 2 / 2 / 3;
-  padding: 1rem;
-  margin-left: 9%;
-  margin-top: 15%;
-
-  /* FLEXBOX CENTERING */
   display: flex;
-  justify-content: center;    /* horizontal center */
-  align-items: center;        /* vertical center */
-  flex-direction: column;     /* stack multiple images vertically */
-  gap: 1rem;                  /* space between images */
-  overflow-y: auto;           /* scroll if too many */
-  scrollbar-gutter: stable;   /* prevent layout jump */
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
-.parent-services {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;   /* 3 perfectly equal columns */
-  height: 100vh;
+.logo-stack {
+  position: relative;
+  display: inline-block;
+}
+
+.logo-fg {
+  width: 450px;
+  height: auto;
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+.logo-bg {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  z-index: 2;
-  align-items: center;                  /* vertically center content in each column */
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  z-index: 0;
+  filter: blur(40px);
+  opacity: 0.6;
 }
 
-/* Left column - your text content */
-.div1-services {
-  grid-column: 1 / 2;    
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;                /* increased a bit for breathing room */
-  gap: 1rem;
-  overflow-y: auto;
-  scrollbar-gutter: stable;
-}
 
-/* Middle column - your spinning logo (now perfectly centered) */
-.div2-services {
-  grid-column: 2 / 3;                   /* occupies column 2 (middle) */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  gap: 2rem;
-  padding: 1rem;
-  /* Removed manual margins - now truly centered thanks to grid + flex */
-}
 
-/* Right column - currently empty, ready for future content */
-.div3-service {
-  grid-column: 3 / 4;                   /* occupies column 3 */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  padding: 2rem;
-  /* Add content here later if needed */
-}
+/* =====================
+   TYPOGRAPHY
+===================== */
 
 .megrim-regular {
   font-family: "Megrim", system-ui;
-  font-weight: 400;
-  font-style: normal;
   font-size: 38px;
-}
-
-span{
-  color: rgb(0, 157, 255);;
 }
 
 .gruppo-regular {
   font-family: "Gruppo", sans-serif;
-  font-weight: 400;
-  font-style: normal;
   font-size: 210%;
 }
 
-
-.fade-in {
-  opacity: 0;
-  animation: fadeIn 1s ease forwards;
+span {
+  color: rgb(0, 157, 255);
 }
 
-.fade-in-delay-2 {
-  opacity: 0;
-  animation: fadeIn 1s ease forwards 1s;
+h1 {
+  font-size: 3.2em;
+  margin: 0;
 }
 
-.slide-in-left-delay-1 {
-  opacity: 0;
-  transform: translateX(-40px);   /* start slightly left */
-  animation: slideInLeft 1s ease forwards 0.5s; /* start at 1 second */
+/* =====================
+   SERVICES SECTION
+===================== */
+
+.parent-services {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  height: 100vh;
+  width: 100%;
+  align-items: center;
+  position: relative;
+  z-index: 2;
 }
+
+.div1-services,
+.div2-services,
+.div3-services {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* =====================
+   CARD COMPONENT
+===================== */
 
 .card {
-  margin: auto;
   width: min(300px, 100%);
-  background-color: rgb(28, 27, 27);
+  background-color: rgb(19, 19, 19);
+  background-image: url("https://www.transparenttextures.com/patterns/buried.png");
   border-radius: 1rem;
   padding: 0.5rem;
   color: #fefefe;
-  opacity: 0;
-  transform: translateX(-300px)
+  opacity: 1;
+  transform: translateX(0);
 }
+
 .card__hero {
   background-color: #0d0d0c;
+  background-image: url("https://www.transparenttextures.com/patterns/snow.png");
   border-radius: 0.5rem 0.5rem 0 0;
   padding: 1.5rem;
-  font-size: 0.875rem;
 }
+
 .card__hero .card__job-title {
   margin: 2rem 0;
   font-size: 2rem;
-  font-weight: 600;
-  padding-right: 2rem;
   font-family: "Noto Znamenny Musical Notation", sans-serif;
 }
+
 .card__footer {
   display: flex;
-  justify-content: flex-start;
-  align-items: start;
-  flex-direction: column;
-  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
   padding: 0.75rem;
-  row-gap: 1rem;
-  font-weight: 700;
-  font-size: 0.875rem;
+  gap: 1rem;
 }
-@media (min-width: 340px) {
-  .card__footer {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-  }
-}
+
 .card__job-summary {
   display: flex;
-  justify-content: flex-start;
   align-items: center;
-  flex-direction: row;
-  flex-wrap: nowrap;
   gap: 0.75rem;
 }
 
-
 .card__btn {
-  width: 100%;
-  font-weight: 400;
-  border: none;
-  display: block;
   cursor: pointer;
-  text-align: center;
   padding: 0.5rem 1.25rem;
   border-radius: 1rem;
+  border: none;
   background-color: #141417;
   color: #fff;
   font-size: 1rem;
 }
 
-.Aboutus{
-  margin: 0 5%;
-  padding: 8vh 5vw;
-  text-align: center;
-}
-
-.Aboutus h1{
-  font-family: "Gruppo";
-  font-size: 60px;
-  margin-top: 0;
-}
-
-.Aboutus p{
-  font-size: 20px;
-}
-
-@media (min-width: 340px) {
-  .card__btn {
-    width: max-content;
-  }
-}
-
-.card__btn:hover{
+.card__btn:hover {
   color: rgb(0, 157, 255);
 }
 
-@keyframes slideInLeft {
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+.card:hover{
+  box-shadow:
+  0 12px 24px rgba(247, 246, 246, 0.55),
+  0 2px 6px rgba(230, 228, 228, 0.03);
 }
 
-.button {
-  position: fixed;
+/* =====================
+   DROP ZONE
+===================== */
+
+.drop-zone {
+  position: absolute;
+  right: 3%;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: block;
-  position: relative;
-  width: 56px;
-  height: 56px;
-  margin: 0;
-  overflow: hidden;
-  outline: none;
-  background-color: transparent;
-  cursor: pointer;
-  border: 0;
-}
+  transform: translateY(-50%) scale(0.95);
 
-.button:before,
-.button:after {
-  content: "";
-  position: absolute;
-  border-radius: 50%;
-  inset: 7px;
-}
+  width: 760px;
+  height: 180px;
 
-.button:before {
-  border: 4px solid #f0eeef;
-  transition: opacity 0.4s cubic-bezier(0.77, 0, 0.175, 1) 80ms,
-    transform 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) 80ms;
-}
+  border: 2px dashed rgb(249, 247, 251);
+  border-radius: 16px;
 
-.button:after {
-  border: 4px solid #498ce5;
-  transform: scale(1.3);
-  transition: opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
-    transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  opacity: 0;
-}
-
-.button:hover:before,
-.button:focus:before {
-  opacity: 0;
-  transform: scale(0.7);
-  transition: opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
-    transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.button:hover:after,
-.button:focus:after {
-  opacity: 1;
-  transform: scale(1);
-  transition: opacity 0.4s cubic-bezier(0.77, 0, 0.175, 1) 80ms,
-    transform 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) 80ms;
-}
-
-.button-box {
   display: flex;
-  position: absolute;
-  top: 0;
-  left: 0;
+  align-items: center;
+  justify-content: center;
+
+  color: rgb(0, 157, 255);
+  background: rgba(0, 0, 0, 0.35);
+  background-image: url("https://www.transparenttextures.com/patterns/buried.png");
+  backdrop-filter: blur(6px);
+
+  /* GSAP controls visibility */
+  opacity: 0;
+  pointer-events: none;
 }
 
-.button-elem {
-  display: block;
-  width: 20px;
-  height: 20px;
-  margin: 17px 18px 0 18px;
-  transform: rotate(180deg);
-  fill: #f0eeef;
+/* =====================
+   ABOUT SECTION
+===================== */
+
+.Aboutus {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 50vh;
+  width: 100%;
+  align-items: center;
+  padding: 3vh 6.2vw;
+  text-align: center;
 }
 
-.button:hover .button-box,
-.button:focus .button-box {
-  transition: 0.4s;
-  transform: translateX(-56px);
+.AboutTitle h1 {
+  margin-top: 5%;
+  text-align: center;
+  font-family: "Gruppo";
+  font-size: 60px;
 }
 
-
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-  }
+.Aboutus p {
+  font-size: 19px;
+  text-align:start;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
+/* =====================
+   FOOTER
+===================== */
 
-footer{
+footer {
   text-align: center;
   color: #837f81;
+  margin-top: 8%;
+}
+
+/* =====================
+   MEDIA QUERIES
+===================== */
+
+@media (max-width: 768px) {
+  .parent-services {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
 }
