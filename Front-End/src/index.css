@@ -1,0 +1,302 @@
+
+* {
+  box-sizing: border-box;
+}
+
+body, #root {
+  min-height: 100vh;
+  opacity: 1;
+  background-color: #000000;
+  background-image: url("https://www.transparenttextures.com/patterns/buried.png");
+}
+
+
+/* =====================
+   GLOBAL RESET & BASE
+===================== */
+
+html {
+  scroll-behavior: smooth;
+}
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: #EDEBDD;
+  background-color: black;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background-color: black;
+}
+
+/* =====================
+   LINKS & NAV
+===================== */
+
+a {
+  font-weight: 500;
+  color: white;
+  text-decoration: none;
+}
+
+a:hover {
+  color: rgb(0, 157, 255);
+}
+
+nav {
+  display:flex;
+  justify-content: space-between;
+  width: 60%;
+  padding: 1rem;
+  margin-left: 18%;
+  margin-top: 1%;
+  z-index: 2;
+}
+
+/* =====================
+   HERO SECTION
+===================== */
+
+.parent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 90vh;
+  width: 100%;
+  align-items: center;
+}
+
+.div1 {
+  margin-left: 80px;
+}
+.div1 h1{
+  font-size: 90px;
+}
+
+.div2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.logo-stack {
+  position: relative;
+  display: inline-block;
+}
+
+.logo-fg {
+  width: 450px;
+  height: auto;
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+.logo-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  z-index: 0;
+  filter: blur(40px);
+  opacity: 0.6;
+}
+
+
+
+/* =====================
+   TYPOGRAPHY
+===================== */
+
+.megrim-regular {
+  font-family: "Megrim", system-ui;
+  font-size: 38px;
+}
+
+.gruppo-regular {
+  font-family: "Gruppo", sans-serif;
+  font-size: 210%;
+}
+
+span {
+  color: rgb(0, 157, 255);
+}
+
+h1 {
+  font-size: 3.2em;
+  margin: 0;
+}
+
+/* =====================
+   SERVICES SECTION
+===================== */
+
+.parent-services {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  height: 100vh;
+  width: 100%;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.div1-services,
+.div2-services,
+.div3-services {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* =====================
+   CARD COMPONENT
+===================== */
+
+.card {
+  width: min(300px, 100%);
+  background-color: rgb(19, 19, 19);
+  background-image: url("https://www.transparenttextures.com/patterns/buried.png");
+  border-radius: 1rem;
+  padding: 0.5rem;
+  color: #fefefe;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.card__hero {
+  background-color: #0d0d0c;
+  background-image: url("https://www.transparenttextures.com/patterns/snow.png");
+  border-radius: 0.5rem 0.5rem 0 0;
+  padding: 1.5rem;
+}
+
+.card__hero .card__job-title {
+  margin: 2rem 0;
+  font-size: 2rem;
+  font-family: "Noto Znamenny Musical Notation", sans-serif;
+}
+
+.card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  gap: 1rem;
+}
+
+.card__job-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.card__btn {
+  cursor: pointer;
+  padding: 0.5rem 1.25rem;
+  border-radius: 1rem;
+  border: none;
+  background-color: #141417;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.card__btn:hover {
+  color: rgb(0, 157, 255);
+}
+
+.card:hover{
+  box-shadow:
+  0 12px 24px rgba(247, 246, 246, 0.55),
+  0 2px 6px rgba(230, 228, 228, 0.03);
+}
+
+/* =====================
+   DROP ZONE
+===================== */
+
+.drop-zone {
+  position: absolute;
+  right: 3%;
+  top: 50%;
+  transform: translateY(-50%) scale(0.95);
+
+  width: 760px;
+  height: 180px;
+
+  border: 2px dashed rgb(249, 247, 251);
+  border-radius: 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: rgb(0, 157, 255);
+  background: rgba(0, 0, 0, 0.35);
+  background-image: url("https://www.transparenttextures.com/patterns/buried.png");
+  backdrop-filter: blur(6px);
+
+  /* GSAP controls visibility */
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* =====================
+   ABOUT SECTION
+===================== */
+
+.Aboutus {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 50vh;
+  width: 100%;
+  align-items: center;
+  padding: 3vh 6.2vw;
+  text-align: center;
+}
+
+.AboutTitle h1 {
+  margin-top: 5%;
+  text-align: center;
+  font-family: "Gruppo";
+  font-size: 60px;
+}
+
+.Aboutus p {
+  font-size: 19px;
+  text-align:start;
+}
+
+/* =====================
+   FOOTER
+===================== */
+
+footer {
+  text-align: center;
+  color: #837f81;
+  margin-top: 8%;
+}
+
+/* =====================
+   MEDIA QUERIES
+===================== */
+
+@media (max-width: 768px) {
+  .parent-services {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
