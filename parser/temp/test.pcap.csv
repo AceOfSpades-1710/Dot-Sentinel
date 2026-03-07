@@ -1,0 +1,4 @@
+frame.time_epoch,ip.src,ip.dst,tcp.srcport,udp.srcport,tcp.dstport,udp.dstport,ip.proto,frame.len,tcp.flags,ip.ttl,tcp.window_size_value
+"1532446653.672120000",,,,,,,,"105",,,
+"1532446679.082120000",,,,,,,,"97",,,
+"1532446852.112120000",,,,,,,,"113",,,
