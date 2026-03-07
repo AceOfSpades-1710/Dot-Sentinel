@@ -3,7 +3,7 @@
 import os
 import joblib
 
-DROP_COLS = ["id", "srcip", "dstip", "stime", "ltime"]
+DROP_COLS = ["id", "srcip", "dstip", "stime", "ltime", "flow_id"]
 CATEGORICAL_COLS = ["proto", "service", "state"]
 
 class Preprocessor:

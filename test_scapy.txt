@@ -1,0 +1,20 @@
+[*] Starting up parser service...
+[*] Initializing Pipeline...
+[*] Loading models from D:\dot-sentinel\Dot-Sentinel\Model\ml\model
+Testing /health...
+Status: 200
+Response: {'status': 'ok', 'model_loaded': True}
+
+Testing /analyze...
+[*] Received file: test.pcap
+[*] Reading pcap with scapy: temp_uploads\test.pcap
+WARNING: Please set conf.dot15d4_protocol to select a 802.15.4 protocol. Values must be in the list: ['sixlowpan', 'zigbee'] Defaulting to SixLoWPAN
+WARNING: Please set conf.dot15d4_protocol to select a 802.15.4 protocol. Values must be in the list: ['sixlowpan', 'zigbee'] Defaulting to SixLoWPAN
+WARNING: more Please set conf.dot15d4_protocol to select a 802.15.4 protocol. Values must be in the list: ['sixlowpan', 'zigbee'] Defaulting to SixLoWPAN
+[!] No IP packets found in PCAP.
+[*] Packet CSV saved to temp\test.pcap.csv
+Status: 200
+Result Status: success
+Total Flows: 0
+Analyze test passed!
+[*] Shutting down parser service...

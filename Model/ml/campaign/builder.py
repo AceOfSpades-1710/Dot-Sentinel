@@ -30,4 +30,9 @@ class CampaignBuilder:
                 continue  # noise
             campaigns[label].append(event.to_dict())
 
+        # FALLBACK: If DBSCAN found no clusters (all noise due to small sample size), 
+        # group all events together so the LLM still generates a report for the current PCAP.
+        if len(campaigns) == 0 and len(events) > 0:
+            campaigns[0] = [e.to_dict() for e in events]
+
         return campaigns

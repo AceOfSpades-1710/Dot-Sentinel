@@ -4,7 +4,7 @@ from sklearn.preprocessing import LabelEncoder, StandardScaler
 
 # ---------------- CONFIG ---------------- #
 
-DROP_COLS = ["id", "srcip", "dstip", "stime", "ltime"]
+DROP_COLS = ["id", "srcip", "dstip", "stime", "ltime", "flow_id"]
 CATEGORICAL_COLS = ["proto", "service", "state"]
 
 import os

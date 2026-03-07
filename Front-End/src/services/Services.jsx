@@ -111,7 +111,6 @@ export default function Services() {
   return (
     <section id="services" className="parent-services">
       {[
-        <>Generate Report with <span>URL</span></>,
         <>Generate Report with <span>PCAP</span> file</>,
         <>Analyse Previous <span>Reports</span></>,
       ].map((title, i) => (
@@ -158,10 +157,56 @@ function Card({ title, onView, active }) {
    DROP ZONE
 =============================== */
 function DropZone() {
-  const handleDrop = e => {
+  const [isUploading, setIsUploading] = useState(false)
+  const [error, setError] = useState(null)
+  const [result, setResult] = useState(null)
+
+  const handleDrop = async e => {
     e.preventDefault()
     const file = e.dataTransfer.files[0]
-    alert(`Uploaded: ${file.name}`)
+    if (!file) return
+
+    await uploadFile(file)
+  }
+
+  const handleFileSelect = async e => {
+    const file = e.target.files[0]
+    if (!file) return
+    await uploadFile(file)
+  }
+
+  const uploadFile = async (file) => {
+    if (!file.name.endsWith('.pcap') && !file.name.endsWith('.pcapng')) {
+      setError("Please upload a .pcap or .pcapng file")
+      return
+    }
+
+    setIsUploading(true)
+    setError(null)
+    setResult(null)
+
+    const formData = new FormData()
+    formData.append("file", file)
+
+    try {
+      // Assuming backend is on localhost:8000
+      const response = await fetch("http://localhost:8000/analyze", {
+        method: "POST",
+        body: formData,
+      })
+
+      if (!response.ok) {
+        throw new Error(`Upload failed: ${response.statusText}`)
+      }
+
+      const data = await response.json()
+      setResult(data)
+    } catch (err) {
+      console.error(err)
+      setError(err.message || "Failed to upload file")
+    } finally {
+      setIsUploading(false)
+    }
   }
 
   return (
@@ -169,8 +214,79 @@ function DropZone() {
       className="drop-inner"
       onDragOver={e => e.preventDefault()}
       onDrop={handleDrop}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '2rem',
+        gap: '1rem',
+        width: '100%',
+        height: '100%',
+        overflowY: 'auto'
+      }}
     >
-      <p>Drop File Here</p>
+      {!result && !isUploading && (
+        <>
+          <p style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Drop PCAP File Here</p>
+          <p>or</p>
+          <input
+            type="file"
+            accept=".pcap,.pcapng"
+            onChange={handleFileSelect}
+            style={{ color: 'white' }}
+          />
+        </>
+      )}
+
+      {isUploading && <p>Analyzing traffic patterns...</p>}
+
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      {result && (
+        <div style={{ width: '100%', textAlign: 'left' }}>
+          <h3>Analysis Complete</h3>
+          <p>Total Flows: {result.total_flows}</p>
+          <p>Campaigns Detected: {result.campaigns ? result.campaigns.length : 0}</p>
+
+          {result.campaigns && result.campaigns.length > 0 && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem', maxHeight: '400px', overflowY: 'auto' }}>
+              {result.campaigns.map((campaign, idx) => (
+                <div key={idx} style={{ padding: '1rem', backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: '8px', border: '1px solid #444' }}>
+                  <h4 style={{ marginTop: 0, color: '#4ade80' }}>Campaign {campaign.campaign_id} (Flows: {campaign.flows.length})</h4>
+
+                  {campaign.llm_explanation && (
+                    <div style={{ padding: '0.8rem', backgroundColor: 'rgba(0,0,0,0.3)', borderRadius: '6px', marginBottom: '1rem', fontSize: '0.9rem', lineHeight: '1.4' }}>
+                      <strong style={{ color: '#a78bfa' }}>AI SOC Analysis:</strong>
+                      <p style={{ whiteSpace: 'pre-wrap', margin: '0.5rem 0 0 0' }}>{campaign.llm_explanation}</p>
+                    </div>
+                  )}
+
+                  <details>
+                    <summary style={{ cursor: 'pointer', opacity: 0.8, fontSize: '0.9em' }}>View Flows</summary>
+                    <ul style={{ margin: '0.5rem 0 0 0', paddingLeft: '1.2rem', fontSize: '0.85em', opacity: 0.9 }}>
+                      {campaign.flows.map((flow, fidx) => (
+                        <li key={fidx} style={{ marginBottom: '0.4rem' }}>
+                          <span style={{ color: flow.attack_prob > 0.5 ? '#f87171' : '#9ca3af' }}>[{flow.attack_type}]</span> {flow.src_ip} &rarr; {flow.dst_ip}
+                          <span style={{ opacity: 0.5, marginLeft: '0.5rem' }}>(Bytes: {flow.bytes})</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </details>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <button
+            onClick={() => setResult(null)}
+            style={{ marginTop: '1.5rem', padding: '0.6rem 1.2rem', cursor: 'pointer', backgroundColor: '#3b82f6', color: 'white', border: 'none', borderRadius: '4px', fontWeight: 'bold' }}
+          >
+            Analyze Another PCAP
+          </button>
+        </div>
+      )}
     </div>
+
   )
 }
