@@ -146,21 +146,16 @@ h1 {
 
 .parent-services {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   height: 100vh;
-  width: 100%;
+  width: 80%;
   align-items: center;
   position: relative;
+  justify-content: space-evenly;
+  padding-left: 26%;
   z-index: 2;
 }
 
-.div1-services,
-.div2-services,
-.div3-services {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
 /* =====================
    CARD COMPONENT
@@ -230,21 +225,23 @@ h1 {
 
 .drop-zone {
   position: absolute;
-  right: 3%;
+  right: -5rem;
+  
   top: 50%;
-  transform: translateY(-50%) scale(0.95);
+  transform: translateY(-50%) scale(1.95);
 
-  width: 760px;
-  height: 180px;
+  width: auto;
+  height: auto;
+  padding: 2rem;
+  margin-left: 67%;
 
-  border: 2px dashed rgb(249, 247, 251);
   border-radius: 16px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  color: rgb(0, 157, 255);
+  color: #ffff;
   background: rgba(0, 0, 0, 0.35);
   background-image: url("https://www.transparenttextures.com/patterns/buried.png");
   backdrop-filter: blur(6px);
