@@ -1,0 +1,27 @@
+﻿[*] Starting up parser service...
+[*] Initializing Pipeline...
+[*] Loading models from d:\dot-sentinel\Dot-Sentinel\Model\ml\model
+Testing /health...
+Status: 200
+Response: {'status': 'ok', 'model_loaded': True}
+
+Testing /analyze...
+[*] Received file: test.pcap
+[*] Running tshark: tshark -r temp_uploads\test.pcap -T fields -E header=y -E separator=, -E quote=d -E occurrence=f -e frame.time_epoch -e ip.src -e ip.dst -e tcp.srcport -e udp.srcport -e tcp.dstport -e udp.dstport -e ip.proto -e frame.len -e tcp.flags -e ip.ttl -e tcp.window_size_value
+[*] Packet CSV saved to temp\test.pcap.csv
+Columns before agg: Index(['time', 'srcip', 'dstip', 'tcp.srcport', 'udp.srcport', 'tcp.dstport',
+       'udp.dstport', 'proto', 'len', 'tcp.flags', 'ttl', 'swin', 'spot',
+       'dsport', 'flow_id'],
+      dtype='object')
+Shape before agg: (0, 15)
+Aggregated columns: MultiIndex([('time',   'min'),
+            ('time',   'max'),
+            ('time', 'count'),
+            ( 'len',   'sum'),
+            ( 'ttl',  'mean')],
+           )
+Aggregated shape: (0, 5)
+[!] Error processing file: Columns must be same length as key
+Status: 500
+Error: {"detail":"Columns must be same length as key"}
+[*] Shutting down parser service...
