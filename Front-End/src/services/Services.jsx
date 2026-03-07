@@ -1,6 +1,7 @@
 import { useRef, useState, useLayoutEffect } from "react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { API_BASE_URL} from '../config'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -189,8 +190,7 @@ function DropZone() {
     formData.append("file", file)
 
     try {
-      // Assuming backend is on localhost:8000
-      const response = await fetch("http://localhost:8000/analyze", {
+      const response = await fetch(`${API_BASE_URL}/analyze`, {
         method: "POST",
         body: formData,
       })
