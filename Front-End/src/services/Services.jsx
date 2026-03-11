@@ -190,10 +190,22 @@ function DropZone() {
     formData.append("file", file)
 
     try {
-      const response = await fetch(`${API_BASE_URL}/analyze`, {
+      const targetURL = window.location.hostname === "localhost"
+        ? "/analyze"
+        : `${API_BASE_URL}/analyze`;
+      const response = await fetch(targetURL, {
         method: "POST",
         body: formData,
-      })
+
+        });
+
+    // try {
+    //   const response = await fetch(`${API_BASE_URL}/analyze`, {
+    //     method: "POST",
+    //     body: formData,
+    //   })
+
+    
 
       if (!response.ok) {
         throw new Error(`Upload failed: ${response.statusText}`)
