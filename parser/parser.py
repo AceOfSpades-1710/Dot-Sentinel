@@ -2,62 +2,41 @@ import pandas as pd
 import os
 import uuid
 import time
-from scapy.all import rdpcap, IP, TCP, UDP, ICMP
+from scapy.all import PcapReader, IP, TCP, UDP, ICMP
 
 class PcapParser:
     def __init__(self):
         pass
-
-    def parse_pcap_to_csv(self, pcap_path, output_csv_path):
-        """
-        Parses a PCAP file using Scapy and saves packet-level data to a CSV.
-        """
-        print(f"[*] Reading pcap with scapy: {pcap_path}")
-        packets = rdpcap(pcap_path)
         
+    def parse_pcap_to_csv(self, pcap_path, output_csv_path):
+        print(f"[*] Streaming pcap with scapy: {pcap_path}")
         data = []
-        for pkt in packets:
-            row = {
-                "time": float(pkt.time),
-                "len": len(pkt),
-                "srcip": None,
-                "dstip": None,
-                "proto": None,
-                "sport": 0,
-                "dport": 0,
-                "ttl": 0,
-                "swin": 0
-            }
-            
-            if IP in pkt:
-                row["srcip"] = pkt[IP].src
-                row["dstip"] = pkt[IP].dst
-                row["proto"] = pkt[IP].proto
-                row["ttl"] = pkt[IP].ttl
-                
-                if TCP in pkt:
-                    row["sport"] = pkt[TCP].sport
-                    row["dport"] = pkt[TCP].dport
-                    row["swin"] = pkt[TCP].window
-                elif UDP in pkt:
-                    row["sport"] = pkt[UDP].sport
-                    row["dport"] = pkt[UDP].dport
-                elif ICMP in pkt:
-                    # ICMP has no ports, so we leave as 0
-                    pass
-            
-            # Only add if it's an IP packet (we need src/dst for flows)
-            if row["srcip"] is not None:
+        
+        # Use PcapReader instead of rdpcap to prevent memory hanging
+        with PcapReader(pcap_path) as reader:
+            for pkt in reader:
+                if IP not in pkt:
+                    continue
+                    
+                row = {
+                    "time": float(pkt.time),
+                    "len": len(pkt),
+                    "srcip": pkt[IP].src,
+                    "dstip": pkt[IP].dst,
+                    "proto": pkt[IP].proto,
+                    "sport": pkt[TCP].sport if TCP in pkt else (pkt[UDP].sport if UDP in pkt else 0),
+                    "dport": pkt[TCP].dport if TCP in pkt else (pkt[UDP].dport if UDP in pkt else 0),
+                    "ttl": pkt[IP].ttl,
+                    "swin": pkt[TCP].window if TCP in pkt else 0
+                }
                 data.append(row)
                 
+                # Safety break for massive files in free tier
+                if len(data) > 20000: 
+                    break
+                    
         df = pd.DataFrame(data)
-        if df.empty:
-            print("[!] No IP packets found in PCAP.")
-            # Create empty DF with expected columns
-            df = pd.DataFrame(columns=["time", "len", "srcip", "dstip", "proto", "sport", "dport", "ttl", "swin"])
-            
         df.to_csv(output_csv_path, index=False)
-        print(f"[*] Packet CSV saved to {output_csv_path}")
         return output_csv_path
 
     def aggregate_flows(self, packet_csv_path):

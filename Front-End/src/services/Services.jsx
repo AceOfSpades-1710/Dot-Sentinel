@@ -1,6 +1,7 @@
 import { useRef, useState, useLayoutEffect } from "react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { API_BASE_URL } from "../config"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -18,10 +19,7 @@ export default function Services() {
     const ctx = gsap.context(() => {
       gsap.fromTo(
         cardRefs.current,
-        {
-          opacity: 0,
-          y: 60,
-        },
+        { opacity: 0, y: 60 },
         {
           opacity: 1,
           y: 0,
@@ -59,7 +57,6 @@ export default function Services() {
     const tl = tlRef.current
     if (!tl) return
 
-    // Reverse if clicking active card again
     if (activeIndex === index) {
       tl.reverse()
       setActiveIndex(null)
@@ -71,14 +68,12 @@ export default function Services() {
     const clickedCard = cardRefs.current[index]
     const otherCards = cardRefs.current.filter((_, i) => i !== index)
 
-    // Fade other cards
     tl.to(otherCards, {
       opacity: 0,
       scale: 0.95,
       duration: 0.4,
     })
 
-    // Move clicked card left
     const targetX =
       cardRefs.current[0].offsetLeft - clickedCard.offsetLeft
 
@@ -91,7 +86,6 @@ export default function Services() {
       "<"
     )
 
-    // Reveal drop zone
     tl.to(
       dropRef.current,
       {
@@ -163,6 +157,8 @@ function DropZone() {
 
   const handleDrop = async e => {
     e.preventDefault()
+    if (isUploading) return
+
     const file = e.dataTransfer.files[0]
     if (!file) return
 
@@ -170,13 +166,16 @@ function DropZone() {
   }
 
   const handleFileSelect = async e => {
+    if (isUploading) return
+
     const file = e.target.files[0]
     if (!file) return
+
     await uploadFile(file)
   }
 
-  const uploadFile = async (file) => {
-    if (!file.name.endsWith('.pcap') && !file.name.endsWith('.pcapng')) {
+  const uploadFile = async file => {
+    if (!file.name.endsWith(".pcap") && !file.name.endsWith(".pcapng")) {
       setError("Please upload a .pcap or .pcapng file")
       return
     }
@@ -189,20 +188,25 @@ function DropZone() {
     formData.append("file", file)
 
     try {
-      // Assuming backend is on localhost:8000
-      const response = await fetch("http://localhost:8000/analyze", {
+      const targetURL =
+        window.location.hostname === "localhost"
+          ? "/analyze"
+          : `${API_BASE_URL.replace(/\/$/, "")}/analyze`
+
+      const response = await fetch(targetURL, {
         method: "POST",
         body: formData,
       })
 
       if (!response.ok) {
-        throw new Error(`Upload failed: ${response.statusText}`)
+        const text = await response.text()
+        throw new Error(`Upload failed (${response.status}): ${text}`)
       }
 
       const data = await response.json()
       setResult(data)
     } catch (err) {
-      console.error(err)
+      console.error("Upload error:", err)
       setError(err.message || "Failed to upload file")
     } finally {
       setIsUploading(false)
@@ -215,60 +219,149 @@ function DropZone() {
       onDragOver={e => e.preventDefault()}
       onDrop={handleDrop}
       style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '2rem',
-        gap: '1rem',
-        width: '100%',
-        height: '100%',
-        overflowY: 'auto'
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "2rem",
+        gap: "1rem",
+        width: "100%",
+        height: "100%",
+        overflowY: "auto",
       }}
     >
       {!result && !isUploading && (
         <>
-          <p style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Drop PCAP File Here</p>
+          <p style={{ fontSize: "1.2rem", fontWeight: "bold" }}>
+            Drop PCAP File Here
+          </p>
+
           <p>or</p>
+
           <input
             type="file"
             accept=".pcap,.pcapng"
             onChange={handleFileSelect}
-            style={{ color: 'white' }}
+            style={{ color: "white" }}
           />
         </>
       )}
 
       {isUploading && <p>Analyzing traffic patterns...</p>}
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
       {result && (
-        <div style={{ width: '100%', textAlign: 'left' }}>
+        <div style={{ width: "100%", textAlign: "left" }}>
           <h3>Analysis Complete</h3>
+
           <p>Total Flows: {result.total_flows}</p>
-          <p>Campaigns Detected: {result.campaigns ? result.campaigns.length : 0}</p>
+          <p>
+            Campaigns Detected:{" "}
+            {result.campaigns ? result.campaigns.length : 0}
+          </p>
 
           {result.campaigns && result.campaigns.length > 0 && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem', maxHeight: '400px', overflowY: 'auto' }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "1rem",
+                marginTop: "1rem",
+                maxHeight: "400px",
+                overflowY: "auto",
+              }}
+            >
               {result.campaigns.map((campaign, idx) => (
-                <div key={idx} style={{ padding: '1rem', backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: '8px', border: '1px solid #444' }}>
-                  <h4 style={{ marginTop: 0, color: '#4ade80' }}>Campaign {campaign.campaign_id} (Flows: {campaign.flows.length})</h4>
+                <div
+                  key={idx}
+                  style={{
+                    padding: "1rem",
+                    backgroundColor: "rgba(255,255,255,0.05)",
+                    borderRadius: "8px",
+                    border: "1px solid #444",
+                  }}
+                >
+                  <h4
+                    style={{
+                      marginTop: 0,
+                      color: "#4ade80",
+                    }}
+                  >
+                    Campaign {campaign.campaign_id} (Flows:{" "}
+                    {campaign.flows.length})
+                  </h4>
 
                   {campaign.llm_explanation && (
-                    <div style={{ padding: '0.8rem', backgroundColor: 'rgba(0,0,0,0.3)', borderRadius: '6px', marginBottom: '1rem', fontSize: '0.9rem', lineHeight: '1.4' }}>
-                      <strong style={{ color: '#a78bfa' }}>AI SOC Analysis:</strong>
-                      <p style={{ whiteSpace: 'pre-wrap', margin: '0.5rem 0 0 0' }}>{campaign.llm_explanation}</p>
+                    <div
+                      style={{
+                        padding: "0.8rem",
+                        backgroundColor: "rgba(0,0,0,0.3)",
+                        borderRadius: "6px",
+                        marginBottom: "1rem",
+                        fontSize: "0.9rem",
+                        lineHeight: "1.4",
+                      }}
+                    >
+                      <strong style={{ color: "#a78bfa" }}>
+                        AI SOC Analysis:
+                      </strong>
+
+                      <p
+                        style={{
+                          whiteSpace: "pre-wrap",
+                          margin: "0.5rem 0 0 0",
+                        }}
+                      >
+                        {campaign.llm_explanation}
+                      </p>
                     </div>
                   )}
 
                   <details>
-                    <summary style={{ cursor: 'pointer', opacity: 0.8, fontSize: '0.9em' }}>View Flows</summary>
-                    <ul style={{ margin: '0.5rem 0 0 0', paddingLeft: '1.2rem', fontSize: '0.85em', opacity: 0.9 }}>
+                    <summary
+                      style={{
+                        cursor: "pointer",
+                        opacity: 0.8,
+                        fontSize: "0.9em",
+                      }}
+                    >
+                      View Flows
+                    </summary>
+
+                    <ul
+                      style={{
+                        margin: "0.5rem 0 0 0",
+                        paddingLeft: "1.2rem",
+                        fontSize: "0.85em",
+                        opacity: 0.9,
+                      }}
+                    >
                       {campaign.flows.map((flow, fidx) => (
-                        <li key={fidx} style={{ marginBottom: '0.4rem' }}>
-                          <span style={{ color: flow.attack_prob > 0.5 ? '#f87171' : '#9ca3af' }}>[{flow.attack_type}]</span> {flow.src_ip} &rarr; {flow.dst_ip}
-                          <span style={{ opacity: 0.5, marginLeft: '0.5rem' }}>(Bytes: {flow.bytes})</span>
+                        <li
+                          key={fidx}
+                          style={{ marginBottom: "0.4rem" }}
+                        >
+                          <span
+                            style={{
+                              color:
+                                flow.attack_prob > 0.5
+                                  ? "#f87171"
+                                  : "#9ca3af",
+                            }}
+                          >
+                            [{flow.attack_type}]
+                          </span>{" "}
+                          {flow.src_ip} → {flow.dst_ip}
+
+                          <span
+                            style={{
+                              opacity: 0.5,
+                              marginLeft: "0.5rem",
+                            }}
+                          >
+                            (Bytes: {flow.bytes})
+                          </span>
                         </li>
                       ))}
                     </ul>
@@ -280,13 +373,21 @@ function DropZone() {
 
           <button
             onClick={() => setResult(null)}
-            style={{ marginTop: '1.5rem', padding: '0.6rem 1.2rem', cursor: 'pointer', backgroundColor: '#3b82f6', color: 'white', border: 'none', borderRadius: '4px', fontWeight: 'bold' }}
+            style={{
+              marginTop: "1.5rem",
+              padding: "0.6rem 1.2rem",
+              cursor: "pointer",
+              backgroundColor: "#3b82f6",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              fontWeight: "bold",
+            }}
           >
             Analyze Another PCAP
           </button>
         </div>
       )}
     </div>
-
   )
 }
