@@ -13,13 +13,13 @@ export default function Hero() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ 
+      const tl = gsap.timeline({
         scrollTrigger: {
-            trigger: ".parent",
-            start: "top 80%",
-            end: "bottom 20%",
-            toggleActions: "play reverse play reverse",
-       },
+          trigger: ".parent",
+          start: "top 80%",
+          end: "bottom 20%",
+          toggleActions: "play reverse play reverse",
+        },
         defaults: {
           ease: "power3.out",
         },
@@ -32,16 +32,16 @@ export default function Hero() {
         duration: 1,
       }),
 
-      tl.from(
-        logoRef.current,
-        {
-          opacity: 0,
-          x: +60,
-          duration: 1,
-        },
-        "-=0.5"
-      )
-      
+        tl.from(
+          logoRef.current,
+          {
+            opacity: 0,
+            x: +60,
+            duration: 1,
+          },
+          "-=0.5"
+        )
+
     })
 
     return () => ctx.revert()
@@ -50,7 +50,7 @@ export default function Hero() {
   return (
     <section className="parent">
       {/* TEXT */}
-      <div className="div1" ref={textRef} class="div1">
+      <div className="div1" ref={textRef}>
         <h1 className="megrim-regular">
           Sentinel <span>AI</span>
         </h1>
