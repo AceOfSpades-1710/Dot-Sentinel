@@ -1,7 +1,7 @@
 import { useRef, useState, useLayoutEffect } from "react"
 import gsap from "gsap"
+import { API_BASE_URL } from '../config';
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { API_BASE_URL } from "../config"
 
 gsap.registerPlugin(ScrollTrigger)
 
