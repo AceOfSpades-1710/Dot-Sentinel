@@ -7,10 +7,21 @@ from scapy.all import PcapReader, IP, TCP, UDP, ICMP
 class PcapParser:
     def __init__(self):
         pass
+<<<<<<< HEAD
+=======
+
+    def parse_pcap_to_csv(self, pcap_path, output_csv_path):
+        """
+        Parses a PCAP file using Scapy and saves packet-level data to a CSV.
+        """
+        print(f"[*] Reading pcap with scapy: {pcap_path}")
+        from scapy.all import PcapReader
+>>>>>>> b05a92c (fix: production 404/500 errors and pcap parsing optimization)
         
     def parse_pcap_to_csv(self, pcap_path, output_csv_path):
         print(f"[*] Streaming pcap with scapy: {pcap_path}")
         data = []
+<<<<<<< HEAD
         
         # Use PcapReader instead of rdpcap to prevent memory hanging
         with PcapReader(pcap_path) as reader:
@@ -30,12 +41,61 @@ class PcapParser:
                     "swin": pkt[TCP].window if TCP in pkt else 0
                 }
                 data.append(row)
+=======
+        try:
+            with PcapReader(pcap_path) as reader:
+                for pkt in reader:
+                    row = {
+                        "time": float(pkt.time),
+                        "len": len(pkt),
+                        "srcip": None,
+                        "dstip": None,
+                        "proto": None,
+                        "sport": 0,
+                        "dport": 0,
+                        "ttl": 0,
+                        "swin": 0
+                    }
+                    
+                    if IP in pkt:
+                        row["srcip"] = pkt[IP].src
+                        row["dstip"] = pkt[IP].dst
+                        row["proto"] = pkt[IP].proto
+                        row["ttl"] = pkt[IP].ttl
+                        
+                        if TCP in pkt:
+                            row["sport"] = pkt[TCP].sport
+                            row["dport"] = pkt[TCP].dport
+                            row["swin"] = pkt[TCP].window
+                        elif UDP in pkt:
+                            row["sport"] = pkt[UDP].sport
+                            row["dport"] = pkt[UDP].dport
+                        elif ICMP in pkt:
+                            pass
+                    
+                    if row["srcip"] is not None:
+                        data.append(row)
+                        
+                    # Stop if we hit a reasonable limit for free tier RAM
+                    if len(data) >= 100000:
+                        print("[!] Pcap too large, truncating to 100,000 IP packets")
+                        break
+        except Exception as e:
+            print(f"[!] Error parsing pcap: {e}")
+>>>>>>> b05a92c (fix: production 404/500 errors and pcap parsing optimization)
                 
                 # Safety break for massive files in free tier
                 if len(data) > 20000: 
                     break
                     
         df = pd.DataFrame(data)
+<<<<<<< HEAD
+=======
+        if df.empty:
+            print("[!] No IP packets found in PCAP.")
+            df = pd.DataFrame(columns=["time", "len", "srcip", "dstip", "proto", "sport", "dport", "ttl", "swin"])
+            
+>>>>>>> b05a92c (fix: production 404/500 errors and pcap parsing optimization)
         df.to_csv(output_csv_path, index=False)
         return output_csv_path
 
