@@ -16,10 +16,11 @@ from parser.pipeline import Pipeline
 pipeline_instance = None
 
 def numpy_safe(obj):
-    """Recursively convert NumPy scalars to native Python types so FastAPI can serialize them."""
+    """Recursively convert NumPy scalars and containers to native Python types."""
     if isinstance(obj, dict):
-        return {k: numpy_safe(v) for k, v in obj.items()}
-    elif isinstance(obj, list):
+        # Also convert keys, as NumPy int64 can be a key in clustering results
+        return {str(numpy_safe(k)): numpy_safe(v) for k, v in obj.items()}
+    elif isinstance(obj, (list, tuple, set)):
         return [numpy_safe(i) for i in obj]
     elif isinstance(obj, np.integer):
         return int(obj)
@@ -29,6 +30,10 @@ def numpy_safe(obj):
         return bool(obj)
     elif isinstance(obj, np.ndarray):
         return obj.tolist()
+    elif hasattr(obj, "to_dict"):
+        return numpy_safe(obj.to_dict())
+    elif hasattr(obj, "__dict__"):
+        return numpy_safe(obj.__dict__)
     return obj
 
 @asynccontextmanager
