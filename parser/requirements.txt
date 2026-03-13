@@ -9,3 +9,4 @@ httpx
 pytest
 scapy
 google-generativeai
+python-dotenv
